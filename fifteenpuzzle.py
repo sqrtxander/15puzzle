@@ -65,6 +65,22 @@ class FifteenPuzzle:
             
             self.move_tile(direction)
 
+    def handle_hover(self, mouse_pos):
+        x = mouse_pos[0] // TILE_WIDTH
+        y = mouse_pos[1] // TILE_WIDTH - 1
+
+        if x < 0 or x >= COLS or y < 0 or y >= ROWS:
+            return
+        if self.tiles[y][x].num is None:
+            return
+        if abs(self.empty_x - x) + abs(self.empty_y - y) != 1:
+            return
+        
+        dx = self.empty_x - x
+        dy = self.empty_y - y
+        self.move_tile((dx, dy))
+
+
     def is_solved(self):
         for row in self.tiles:
             for tile in row:
