@@ -40,8 +40,16 @@ def game():
     moves_lbl = FONT_SMALL.render("Moves: 0", True, BLACK)
     moves_lbl_rect = moves_lbl.get_rect()
     moves_lbl_rect.topright = WIDTH - GAP, GAP + controls_btn.rect.height
+    timer_lbl = FONT_SMALL.render("Time: 0", True, BLACK)
+    timer_lbl_rect = timer_lbl.get_rect()
+    timer_lbl_rect.topright = WIDTH - GAP, GAP + controls_btn.rect.height * 2
+    puzzle.timer = 0
+
     while True:
         clock.tick(FPS)
+        dt = clock.get_time() / 1000.0
+        if puzzle.solving and not puzzle.solved:
+            puzzle.timer += dt
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -85,6 +93,7 @@ def game():
 
         SCREEN.blit(moves_lbl, moves_lbl_rect)
 
+        SCREEN.blit(timer_lbl, timer_lbl_rect)
 
 
         if controls and not pygame.mouse.get_pressed()[0]:
@@ -94,6 +103,11 @@ def game():
         moves_lbl_rect = moves_lbl.get_rect()
         moves_lbl_rect.topright = WIDTH - GAP, GAP + controls_btn.rect.height
         SCREEN.blit(moves_lbl, moves_lbl_rect)
+
+        timer_lbl = FONT_SMALL.render(f"Time: {puzzle.timer:.2f}", True, BLACK)
+        timer_lbl_rect = timer_lbl.get_rect()
+        timer_lbl_rect.topright = WIDTH - GAP, GAP + controls_btn.rect.height * 2
+        SCREEN.blit(timer_lbl, timer_lbl_rect)
 
         if not puzzle.solved:
             puzzle.solved = puzzle.is_solved()
