@@ -19,12 +19,12 @@ def menu():
 
         SCREEN.fill(WHITE)
 
-        title = FONT.render("15 Puzzle", True, (0, 0, 0))
+        title = FONT_BIG.render("15 Puzzle", True, (0, 0, 0))
         title_rect = title.get_rect()
         title_rect.center = WIDTH / 2, HEIGHT / 2 - title_rect.height / 2
         SCREEN.blit(title, title_rect)
 
-        instructions = FONT.render("Press SPACE to start", True, (0, 0, 0))
+        instructions = FONT_BIG.render("Press SPACE to start", True, (0, 0, 0))
         instructions_rect = instructions.get_rect()
         instructions_rect.center = WIDTH / 2, HEIGHT / 2 + instructions_rect.height / 2
         SCREEN.blit(instructions, instructions_rect)
@@ -33,13 +33,13 @@ def menu():
 
 def game():
     puzzle = FifteenPuzzle()
-    controls_btn = Button(0, 0, "Controls", BLACK, BLUE)
+    controls_btn = Button(0, 0, "Controls: Arrow keys", FONT_SMALL, BLACK, BLUE)
     controls_btn.rect.topright = WIDTH - GAP, GAP
     controls = False
-    controls_lbl = FONT.render("Arrow keys", True, BLACK)
-    controls_lbl_rect = controls_lbl.get_rect()
-    controls_lbl_rect.topright = WIDTH - GAP, GAP + controls_btn.rect.height
     clock = pygame.time.Clock()
+    moves_lbl = FONT_SMALL.render("Moves: 0", True, BLACK)
+    moves_lbl_rect = moves_lbl.get_rect()
+    moves_lbl_rect.topright = WIDTH - GAP, GAP + controls_btn.rect.height
     while True:
         clock.tick(FPS)
 
@@ -67,12 +67,13 @@ def game():
                 if event.button == 1:
                     if controls_btn.is_hovering(pygame.mouse.get_pos()):
                         controls = not controls
-                        if controls:                        
-                            controls_lbl = FONT.render("Mouse hover", True, BLACK)
+                        if controls:            
+                            controls_btn.text_input = "Controls: Mouse hover"            
                         else:
-                            controls_lbl = FONT.render("Arrow keys", True, BLACK)    
-                        controls_lbl_rect = controls_lbl.get_rect()
-                        controls_lbl_rect.topright = WIDTH - GAP, GAP + controls_btn.rect.height
+                            controls_btn.text_input = "Controls: Arrow keys"
+                        controls_btn.change_colour(pygame.mouse.get_pos())
+                        controls_btn.rect = controls_btn.text.get_rect()
+                        controls_btn.rect.topright = WIDTH - GAP, GAP
 
         SCREEN.fill(WHITE)
         mouse_pos = pygame.mouse.get_pos()
@@ -80,11 +81,22 @@ def game():
         controls_btn.draw(SCREEN)
         controls_btn.change_colour(mouse_pos)
 
-        SCREEN.blit(controls_lbl, controls_lbl_rect)
         puzzle.draw()
+
+        SCREEN.blit(moves_lbl, moves_lbl_rect)
+
+
 
         if controls and not pygame.mouse.get_pressed()[0]:
             puzzle.handle_hover(mouse_pos)
+
+        moves_lbl = FONT_SMALL.render(f"Moves: {puzzle.moves}", True, BLACK)
+        moves_lbl_rect = moves_lbl.get_rect()
+        moves_lbl_rect.topright = WIDTH - GAP, GAP + controls_btn.rect.height
+        SCREEN.blit(moves_lbl, moves_lbl_rect)
+
+        if not puzzle.solved:
+            puzzle.solved = puzzle.is_solved()
 
         pygame.display.flip()
 

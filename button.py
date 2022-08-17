@@ -2,14 +2,15 @@ import pygame
 from constants import *
 
 class Button:
-    def __init__(self, x, y, text_input, base_colour, hovering_colour):
+    def __init__(self, x, y, text_input, font, base_colour, hovering_colour):
         self.x = x
         self.y = y
         self.text_input = text_input
+        self.font = font
         self.base_colour = base_colour
         self.hovering_colour = hovering_colour
         
-        self.text = FONT.render(self.text_input, True, self.base_colour)
+        self.text = self.font.render(self.text_input, True, self.base_colour)
 
         self.rect = self.text.get_rect()
         self.rect.center = (self.x, self.y)
@@ -24,6 +25,6 @@ class Button:
 
     def change_colour(self, mouse_pos):
         if self.is_hovering(mouse_pos):
-            self.text = FONT.render(self.text_input, True, self.hovering_colour)
+            self.text = self.font.render(self.text_input, True, self.hovering_colour)
         else:
-            self.text = FONT.render(self.text_input, True, self.base_colour)
+            self.text = self.font.render(self.text_input, True, self.base_colour)

@@ -29,14 +29,15 @@ class FifteenPuzzle:
         self.empty_x, self.empty_y = COLS - 1, ROWS - 1
         self.tiles[self.empty_y][self.empty_x].colour = WHITE
         self.tiles[self.empty_y][self.empty_x].num = None
+        self.moves = 0
+        self.solved = True
 
     def draw(self):
         for row in self.tiles:
             for tile in row:
                 tile.draw()
 
-    def move_tile(self, direction):
-
+    def move_tile(self, direction):        
         new_x = self.empty_x - direction[0]
         new_y = self.empty_y - direction[1]
 
@@ -57,13 +58,16 @@ class FifteenPuzzle:
         self.empty_x -= direction[0]
         self.empty_y -= direction[1]
 
+        if not self.solved:
+            self.moves += 1
+
     def scramble(self):
+        self.solved = False
         directions = ((1, 0), (0, 1), (-1, 0), (0, -1))
         for _ in range(1000):
-
-            direction = random.choice(directions)
-            
+            direction = random.choice(directions)        
             self.move_tile(direction)
+        self.moves = 0
 
     def handle_hover(self, mouse_pos):
         x = mouse_pos[0] // TILE_WIDTH

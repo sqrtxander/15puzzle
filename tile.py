@@ -19,7 +19,7 @@ class Tile:
             return
 
         pygame.draw.rect(SCREEN, self.colour, self.rect)
-        label = FONT.render(str(self.num), True, self.text_colour)
+        label = FONT_BIG.render(str(self.num), True, self.text_colour)
         label_rect = label.get_rect()
         label_rect.center = self.rect.center
         SCREEN.blit(label, label_rect)
